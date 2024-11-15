@@ -20,10 +20,12 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(enforceJsonContentType);
 app.use(express.json());
+app.use(express.static("public"));
 
 
 app.use("/api/cards", cardRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+
 
 module.exports = app;
