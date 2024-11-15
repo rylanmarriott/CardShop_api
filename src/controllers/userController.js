@@ -40,15 +40,37 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    try {
-        const { username, password } = req.body;
+    const { email, password } = req.body;
 
-        // Authenticate user 
-        // Simulate session creation
-        
-        res.status(200).json({ message: "User logged in successfully" });
+    // Validate input fields
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    try {
+        // Find the user by email
+        const user = await prisma.customer.findUnique({
+            where: { email },
+        });
+
+        if (!user) {
+            // If user doesn't exist, return 404
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Compare the provided password with the hashed password in the database
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            // If the password is invalid, return 401
+            return res.status(401).json({ message: "Invalid email or password" });
+        }
+
+        // If successful, return the user's email
+        res.status(200).json({ message: "Login successful", email: user.email });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err.message);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
