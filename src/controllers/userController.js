@@ -83,9 +83,14 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        // Simulate destroying a session
+        if (!req.session.user) {
+            return res.status(401).json({ message: "No active session to log out" });
+        }
         
-
+        req.session.destroy((err) => {
+            console.error("Error destroying session:", err);
+            return res.status(500).json({ message: "Failed to log out" });
+        })
         res.status(200).json({ message: "User logged out successfully" });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -99,7 +104,12 @@ const getSession = async (req, res) => {
         }
         
 
-        res.status(200).json({ session: { user: req.session.user } });
+        res.status(200).json({
+            customer_id: req.session.user.customer_id,
+            email: req.session.user.email,
+            first_name: req.session.user.first_name,
+            last_name: req.session.user.last_name,
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
