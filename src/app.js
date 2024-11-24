@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const session = require("express-session");
 const cardRoutes = require("./routes/cardRoutes");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -14,9 +15,24 @@ const enforceJsonContentType = (req,res,next) => {
         }
     }
     next();
-}
+};
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+}));
+
+app.use(session({
+    secret: "VeryInsecureTestKey",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60
+    },
+}));
+
 app.use(bodyParser.json());
 app.use(enforceJsonContentType);
 app.use(express.json());

@@ -66,10 +66,17 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
+        req.session.user = {
+            customer_id: user.customer_id,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+        };
+
         // If successful, return the user's email
-        res.status(200).json({ message: "Login successful", email: user.email });
+        res.status(200).json({ message: "Login successful", user: req.session.user });
     } catch (err) {
-        console.error(err.message);
+        console.error("Error during login:", err.message);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -87,10 +94,12 @@ const logout = async (req, res) => {
 
 const getSession = async (req, res) => {
     try {
-        // Simulate getting a session
+        if (!req.session.user) {
+            return res.status(401).json({ message: "No active session"});
+        }
         
 
-        res.status(200).json({ session: { username: "test_user" } });
+        res.status(200).json({ session: { user: req.session.user } });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
