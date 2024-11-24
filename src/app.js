@@ -5,6 +5,7 @@ const session = require("express-session");
 const cardRoutes = require("./routes/cardRoutes");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
+const purchaseRoutes = require("./routes/purchaseRoutes");
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(express.static("public"));
 app.use("/api/cards", cardRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/purchases", purchaseRoutes);
 
 
 module.exports = app;
