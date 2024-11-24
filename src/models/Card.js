@@ -5,8 +5,8 @@ const CardSchema = new mongoose.Schema({
     type: { type: String, required: true },
     price: { type: Number, required: true },
     rarity: { type: String, required: true },
-    description: { type: String },
-    imageUrl: { type: String },
+    description: { type: String, required: true },
+    imageUrl: { type: String, required: true },
 });
 
 module.exports = mongoose.model("Card", CardSchema);
