@@ -13,11 +13,16 @@ const getAllProducts = async (req, res) => {
 };
 
 const getProductById = async (req, res) => {
-    try {
-        const productId = req.params.id;
+    const { id } = req.params;
 
-        // Fetch product by ID 
-        const product = { id: productId, name: `Product ${productId}`, price: 10 };
+    if (!Number.isInteger(Number(id))) {
+        return res.status(400).json({ message: "Product ID must be an integer" });
+    }
+
+    try {
+        const product = await prisma.product.findUnique({
+            where: { product_id: parseInt(id) },
+        });
 
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
@@ -25,6 +30,7 @@ const getProductById = async (req, res) => {
 
         res.status(200).json(product);
     } catch (err) {
+        console.error("Error fetching product by ID:", err.message);
         res.status(500).json({ message: err.message });
     }
 };
