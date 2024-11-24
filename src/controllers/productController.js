@@ -35,32 +35,4 @@ const getProductById = async (req, res) => {
     }
 };
 
-const purchaseProduct = async (req, res) => {
-    try {
-        const { productId, quantity } = req.body;
-
-        if (!productId || !quantity) {
-            return res.status(400).json({ message: "Product ID and quantity are required" });
-        }
-
-        // Simulate product purchase 
-        const product = { id: productId, name: `Product ${productId}`, price: 10 };
-
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-
-        const totalPrice = product.price * quantity;
-
-        res.status(200).json({
-            message: "Product purchased successfully",
-            product,
-            quantity,
-            totalPrice,
-        });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
-module.exports = { getAllProducts, getProductById, purchaseProduct };
+module.exports = { getAllProducts, getProductById };
