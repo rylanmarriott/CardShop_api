@@ -20,7 +20,8 @@
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "mongo": "^0.1.0",
-    "mongoose": "^8.8.1"
+    "mongoose": "^8.8.1",
+    "password-validator": "^5.3.0"
   },
   "devDependencies": {
     "prisma": "^5.22.0"

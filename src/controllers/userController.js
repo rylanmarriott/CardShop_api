@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
+const passwordSchema = require("../config/passwordPolicy");
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,28 @@ const signup = async (req, res) => {
     // Validate input fields
     if (!email || !password || !first_name || !last_name) {
         return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const passwordValidationErrors = passwordSchema.validate(password, { list: true });
+
+    if (passwordValidationErrors.length > 0) {
+        const errorMessages = passwordValidationErrors.map((error) => {
+            switch (error) {
+                case "min":
+                    return "Password must be at least 8 characters long";
+                case "uppercase":
+                    return "Password must have at least one uppercase letter";
+                case "lowercase":
+                    return "Password must have at least one lowercase letter";
+                case "digits":
+                    return "Password must have at least one number";
+            }
+        });
+
+        return res.status(400).json({
+            message: "Password does not meet the required policy",
+            errors: errorMessages,
+        })
     }
 
     try {
