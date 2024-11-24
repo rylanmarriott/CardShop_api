@@ -1,14 +1,14 @@
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 const getAllProducts = async (req, res) => {
     try {
-        // Fetch all products 
-        const products = [
-            { id: 1, name: "Product 1", price: 10 },
-            { id: 2, name: "Product 2", price: 20 },
-        ];
+        const products = await prisma.product.findMany();
 
         res.status(200).json(products);
     } catch (err) {
         res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
