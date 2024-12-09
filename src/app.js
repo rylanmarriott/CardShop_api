@@ -6,6 +6,7 @@ const cardRoutes = require("./routes/cardRoutes");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
+const path = require('path');
 
 const app = express();
 
@@ -19,7 +20,8 @@ const enforceJsonContentType = (req,res,next) => {
 };
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
 
@@ -39,6 +41,7 @@ app.use(enforceJsonContentType);
 app.use(express.json());
 app.use(express.static("public"));
 
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use("/api/cards", cardRoutes);
 app.use("/api/users", userRoutes);
